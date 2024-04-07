@@ -1,0 +1,35 @@
+import React, { useState, useEffect } from 'react';
+
+function RandomQuoteMachine() {
+  const [quote, setQuote] = useState('');
+  const [author, setAuthor] = useState('');
+
+  useEffect(() => {
+    fetchQuote();
+  }, []);
+
+  const fetchQuote = () => {
+    fetch('https://api.quotable.io/random')
+      .then(response => response.json())
+      .then(data => {
+        setQuote(data.content);
+        setAuthor(data.author);
+      })
+      .catch(error => console.error('Error fetching quote:', error));
+  };
+
+  const tweetQuote = () => {
+    window.open(`https://twitter.com/intent/tweet?text="${quote}" - ${author}`);
+  };
+
+  return (
+    <div id="quote-box" className="text-center">
+      <h1 id="text">{quote}</h1>
+      <p id="author">- {author}</p>
+      <button id="new-quote" onClick={fetchQuote} className="btn btn-primary m-2">New Quote</button>
+      <a id="tweet-quote" href="#" onClick={tweetQuote} className="btn btn-secondary m-2" target="_blank">Tweet Quote</a>
+    </div>
+  );
+}
+
+export default RandomQuoteMachine;
